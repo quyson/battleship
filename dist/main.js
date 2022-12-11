@@ -1,0 +1,1 @@
+(()=>{let t=new class{constructor(t,h){this.name=t,this.length=h,this.hit=function(){this.length=this.length-1},this.sunk=!1}}("carrier",5);console.log(t.length),t.hit(),console.log(t.length),t.hit(),t.hit(),console.log(t.length)})();
