@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/quyson/battleship/issues"
   },
-  "homepage": "https://github.com/quyson/battleship#readme"
+  "homepage": "https://github.com/quyson/battleship#readme",
+  "devDependencies": {
+    "webpack-cli": "^5.0.1"
+  }
 }
