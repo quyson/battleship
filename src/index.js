@@ -1,7 +1,8 @@
 class Player{
     constructor(name){
         this.name = name,
-        this.ships = []
+        this.ships = [],
+        this.board = []
     }
 }
 
@@ -16,15 +17,16 @@ class Ship{
     }
 }
 
-function initializeShips(){
-    const shipInfo = {
-        carrier: 5,
-        battleship: 4,
-        cruiser: 3,
-        submarine: 3,
-        destroyer: 2,
-        scout: 2
-    }
+const shipInfo = {
+    carrier: 5,
+    battleship: 4,
+    cruiser: 3,
+    submarine: 3,
+    destroyer: 2,
+    scout: 2
+}
+
+function initializeShips(shipInfo){
     let shipList = []
     for(item in shipInfo){
         let ship = new Ship(item, shipInfo[item]);
@@ -33,8 +35,16 @@ function initializeShips(){
     return shipList;
 }
 let player1 = new Player("one");
-player1.ships = initializeShips();
-console.log(player1.ships)
+player1.ships = initializeShips(shipInfo);
 
+function generateBoard(player){
+    const gameboard = [];
+    for(let i = 0; i <= 99; i++){
+        gameboard.push(0);
+    };
+    return player.board = gameboard
+}
 
+generateBoard(player1);
+console.log(player1.board);
 
