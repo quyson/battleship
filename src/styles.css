@@ -1,0 +1,41 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.mainContainer{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.title{
+    font-weight: 900;
+    font-size: 5rem;
+}
+
+.informationTag{
+    font-size: 2rem;
+    color: red;
+}
+
+.boardContainer{
+    display: flex;
+    gap: 5rem;
+}
+
+.board{
+    border: solid black 1px;
+    height: 400px;
+    width: 400px;
+}
+
+.buttonContainer{
+    display: flex;
+    justify-items: center;
+    align-self: center;
+}
