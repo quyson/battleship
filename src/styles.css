@@ -29,9 +29,17 @@ body {
 }
 
 .board{
+    display: grid;
+    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns: repeat(10, 1fr);
     border: solid black 1px;
     height: 400px;
     width: 400px;
+}
+
+.box{
+    height: auto;
+    width: auto;
 }
 
 .buttonContainer{

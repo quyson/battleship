@@ -1,40 +1,32 @@
 import { initializePage } from "./initialize";
-import { initializeShips, generateBoard, convertLetter, checkBoardSpace, placeShips, userInput, attackInput, checkHit, checkSunk, computerPlacement, randomAttackInput, checkWin, gameStart } from "./script";
+import { changeBoard, changeStatus } from "./domChange";
+import { sleep, initializeShips, generateBoard, convertLetter, checkBoardSpace, placeShips, userInput, attackInput, checkHit, checkSunk, computerPlacement, randomAttackInput, checkWin, gameStart, Player, Ship, shipInfo } from "./script";
 import "./styles.css";
-
-class Player{
-    constructor(name){
-        this.name = name,
-        this.ships = [],
-        this.board = []
-    }
-};
-
-class Ship{
-    constructor(name, length){
-        this.name = name;
-        this.length = length;
-        this.health = length;
-        this.hit = function() {
-            this.health = this.health - 1;
-        },
-        this.sunk = false;
-    }
-};
-
-const shipInfo = {
-    carrier: 5,
-    battleship: 4,
-    cruiser: 3,
-    submarine: 3,
-    destroyer: 2,
-    scout: 1
-};
 
 initializePage();
 
 const startButton = document.querySelector('.startButton');
 startButton.addEventListener('click', e => {
+    const board1 = document.querySelector('#one');
+    const board2 = document.querySelector('#two');
+    for(let i = 0; i < 100; i ++){
+        let box = document.createElement('div');
+        box.className = 'box';
+        box.style.borderColor = 'black';
+        box.style.borderWidth = '1px';
+        box.style.borderStyle = 'solid'
+        board1.append(box);
+        box.id = `p${i}`;
+    }
+    for(let i = 0; i < 100; i ++){
+        let box = document.createElement('div');
+        box.className = 'box';
+        box.style.borderColor = 'black';
+        box.style.borderWidth = '1px';
+        box.style.borderStyle = 'solid'
+        board2.append(box);
+        box.id = `cpu${i}`;
+    }
     gameStart();
 })
 

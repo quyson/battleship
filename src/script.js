@@ -1,6 +1,37 @@
+import {changeBoard, changeStatus} from "./domChange";
+
+class Player{
+    constructor(name){
+        this.name = name,
+        this.ships = [],
+        this.board = []
+    }
+};
+
+class Ship{
+    constructor(name, length){
+        this.name = name;
+        this.length = length;
+        this.health = length;
+        this.hit = function() {
+            this.health = this.health - 1;
+        },
+        this.sunk = false;
+    }
+};
+
+const shipInfo = {
+    carrier: 5,
+    battleship: 4,
+    cruiser: 3,
+    submarine: 3,
+    destroyer: 2,
+    scout: 1
+};
+
 function initializeShips(shipInfo){
     let shipList = []
-    for(item in shipInfo){
+    for(let item in shipInfo){
         let ship = new Ship(item, shipInfo[item]);
         shipList.push(ship)
     }
@@ -48,7 +79,7 @@ function placeShips(player, value, direction, ship, length){
                 return false
             } 
         } 
-        for(i = 0; i < length; i++){
+        for(let i = 0; i < length; i++){
             placeholder = (1 * i);
             player.board[Number(value) + placeholder] = ship;
         } return true
@@ -60,7 +91,7 @@ function placeShips(player, value, direction, ship, length){
                 return false
             } 
         } 
-        for(i = 0; i < length; i++){
+        for(let i = 0; i < length; i++){
             placeholder = (1 * i);
             player.board[Number(value) - placeholder] = ship;
         } return true
@@ -72,7 +103,7 @@ function placeShips(player, value, direction, ship, length){
                 return false
             } 
         } 
-        for(i = 0; i < length; i++){
+        for(let i = 0; i < length; i++){
             placeholder = (10 * i);
             player.board[Number(value) - placeholder] = ship;
         } return true
@@ -84,7 +115,7 @@ function placeShips(player, value, direction, ship, length){
                 return false
             } 
         } 
-        for(i = 0; i < length; i++){
+        for(let i = 0; i < length; i++){
             placeholder = (10 * i);
             player.board[Number(value) + placeholder] = ship;
         } return true
@@ -156,40 +187,47 @@ function attackInput(){
     let letterVerification = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
     let attackInput = prompt(`Where will you attack? (Ex: a0, b5, j9)`);
     while(letterVerification.includes(attackInput[0]) == false || Number.isInteger(Number(attackInput[1])) == false || attackInput.length > 2){
-        console.log("Please input correctly!")
+        alert("Please input correctly!")
         attackInput = prompt(`Where will you attack? (Ex: a0, b5, j9)`);
     }
     return attackInput;
 };
 
-function checkHit(player, attackInput){
+function checkHit(player, attackInput, variableReference){
     let value = Number(convertLetter(attackInput));
     if(player.board[value] == 'x'){
-        alert("You've already hit this position");
+        changeStatus("Position has been hit already!")
         return false
     }else if(player.board[value] == 0){
         player.board[value] = 'x';
-        alert("You missed!")
+        changeStatus("Missed")
+        changeBoard(player, value, 'x', variableReference);
     }else{
-        alert("Direct hit!");
+        changeStatus("Direct Hit")
         if(player.board[value] == 'carrier'){
             player.ships[0].hit();
             player.board[value] = 'x';
+            changeBoard(player, value, '!', variableReference);
         } else if(player.board[value] == 'battleship'){
             player.ships[1].hit();
             player.board[value] = 'x';
+            changeBoard(player, value, '!', variableReference);
         } else if(player.board[value] == 'cruiser'){
             player.ships[2].hit();
             player.board[value] = 'x';
+            changeBoard(player, value, '!', variableReference);
         } else if(player.board[value] == 'submarine'){
             player.ships[3].hit();
             player.board[value] = 'x';
+            changeBoard(player, value, '!', variableReference);
         } else if(player.board[value] == 'destroyer'){
             player.ships[4].hit();
             player.board[value] = 'x';
+            changeBoard(player, value, '!', variableReference);
         } else {
             player.ships[5].hit()
             player.board[value] = 'x';
+            changeBoard(player, value, '!', variableReference);
         }
     }
 };
@@ -198,7 +236,7 @@ function checkSunk(player){
     player.ships.forEach(element => {
         if(element.health == 0){
             element.sunk = true;
-            console.log(`You have sunk ${element.name}!`)
+            changeStatus(`You have sunk ${element.name}!`)
         }
     });
 };
@@ -242,7 +280,11 @@ function randomAttackInput(){
     return letter.concat(number);
 }
 
-function gameStart(){
+async function sleep() {
+    return new Promise((resolve) => setTimeout(resolve, 300));
+  }
+
+async function gameStart(){
     let game = true;
     while(game == true){
         let player1 = new Player("one");
@@ -256,30 +298,39 @@ function gameStart(){
 
         userInput(player1);
         computerPlacement(player2);
-        let playerTurn = 2;
+        console.log(player2.board);
+        let playerTurn = 1;
         let attackPhase = true;
-
+        let variableReference = {variable1: player1,
+            variable2: player2
+        }
+        
         while(attackPhase == true){
-            if(playerTurn == 1){
-                let attackInput = randomAttackInput();
+            let input = "";
+            if(playerTurn == 2){
+                alert("Computer Turn")
+                input = randomAttackInput();
+                checkHit(player1, input, variableReference);
+                checkSunk(player1);
+                if(checkWin(player1)){
+                    changeStatus("Computer Player has won!");
+                    attackPhase = false;
+                } 
             } else {
-                let attackInput = attackInput();
+                input = attackInput();
+                checkHit(player2, input, variableReference);
+                checkSunk(player2);
+                if(checkWin(player2)){
+                    changeStatus("Player has won!");
+                    attackPhase = false;
+                } 
             }
-            checkHit(player + Window(playerTurn), attackInput);
-            checkSunk(player + Window(playerTurn));
-            if(checkWin(player + Window(playerTurn))){
-                if(playerTurn == 2){
-                    console.log("Player One has won!");
-                    attackPhase = false;
-                } else {
-                    console.log("Player Two has won!");
-                    attackPhase = false;
-                }
-            } if(playerTurn == 2){
+            alert("Changing players");
+            if(playerTurn == 2){
                 playerTurn = 1;
             } else {
                 playerTurn = 2;
-            }
+            } await sleep()
         } game = false;  
     }
 }
@@ -287,4 +338,4 @@ function gameStart(){
 export {initializeShips, generateBoard, convertLetter, 
     checkBoardSpace, placeShips, userInput, attackInput,
     checkHit, checkSunk, computerPlacement, randomAttackInput,
-    checkWin, gameStart}
+    checkWin, gameStart,sleep, Player, Ship, shipInfo}
